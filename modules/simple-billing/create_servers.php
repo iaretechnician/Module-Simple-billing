@@ -104,32 +104,12 @@ function exec_ogp_module()
 				$installer_name = $mod_xml->installer_name;
 				$mod_cfg_id = $home_info['mods'][$mod_id]['mod_cfg_id'];
 				
-				//Get Preinstall commands from db
-				$game_mod_precmd = $db->resultQuery("SELECT DISTINCT precmd FROM OGP_DB_PREFIXgame_mods WHERE mod_id='" . $db->realEscapeSingle($mod_id) . "'");
-				if ($game_mod_precmd[0]['precmd'] === NULL OR empty($game_mod_precmd[0]['precmd']))
-				{
-					$config_mod_precmd = $db->resultQuery("SELECT DISTINCT def_precmd FROM OGP_DB_PREFIXconfig_mods WHERE mod_cfg_id='" . $db->realEscapeSingle($mod_cfg_id) . "'");
-					if ($config_mod_precmd[0]['def_precmd'] === NULL OR empty($config_mod_precmd[0]['def_precmd']))
-						$precmd = "";
-					else
-						$precmd = $config_mod_precmd[0]['def_precmd'];
-				}
-				else
-					$precmd = $game_mod_precmd[0]['precmd'];
+				//Get Preinstall commands from xml
+				$precmd = $server_xml->pre_install;  
 					
-				//Get Postinstall commands from db
-				$game_mod_postcmd = $db->resultQuery("SELECT DISTINCT postcmd FROM OGP_DB_PREFIXgame_mods WHERE mod_id='" . $db->realEscapeSingle($mod_id) . "'");
-				if ($game_mod_postcmd[0]['postcmd'] === NULL OR empty($game_mod_postcmd[0]['postcmd']))
-				{
-					$config_mod_postcmd = $db->resultQuery("SELECT DISTINCT def_postcmd FROM OGP_DB_PREFIXconfig_mods WHERE mod_cfg_id='" . $db->realEscapeSingle($mod_cfg_id) . "'");
-					if ($config_mod_postcmd[0]['def_postcmd'] === NULL OR empty($config_mod_postcmd[0]['def_postcmd']))
-						$postcmd = "";
-					else
-						$postcmd = $config_mod_postcmd[0]['def_postcmd'];
-				}
-				else
-					$postcmd = $game_mod_postcmd[0]['postcmd'];
-
+				//Get Postinstall commands from xml
+				$postcmd = $server_xml->post_install;  
+				
 				//Enable FTP account in remote server
 				if ($ftp == "enabled")
 				{
